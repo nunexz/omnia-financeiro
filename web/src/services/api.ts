@@ -73,6 +73,9 @@ export const gastosFixosAPI = {
 
   deleteGasto: (id: string) =>
     api.delete(`/api/gastos-fixos/${id}`),
+
+  marcarPago: (id: string, pago: boolean) =>
+    api.patch(`/api/gastos-fixos/${id}/marcar-pago`, { pago }),
 }
 
 export const dividasAPI = {
@@ -87,6 +90,15 @@ export const dividasAPI = {
 
   deleteDivida: (id: string) =>
     api.delete(`/api/dividas/${id}`),
+
+  marcarPago: (id: string, pago: boolean) =>
+    api.patch(`/api/dividas/${id}/marcar-pago`, { pago }),
+
+  registrarAntecipacao: (id: string, parcelas_adicionais: number) =>
+    api.patch(`/api/dividas/${id}/antecipacao`, { parcelas_adicionais }),
+
+  quitarDivida: (id: string) =>
+    api.patch(`/api/dividas/${id}/quitar`),
 }
 
 export const gastosVariaveisAPI = {

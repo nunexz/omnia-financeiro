@@ -11,7 +11,14 @@ const PORT = process.env.PORT || 5000;
 
 // Middlewares
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: (origin, callback) => {
+    // Permitir qualquer localhost em desenvolvimento
+    if (!origin || origin.includes('localhost') || origin.includes('127.0.0.1')) {
+      callback(null, true)
+    } else {
+      callback(new Error('CORS not allowed'))
+    }
+  },
   credentials: true,
 }));
 
@@ -23,17 +30,18 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', message: 'Omnia Financeiro API is running' });
 });
 
-// TODO: Import routes
-// import authRoutes from './routes/auth';
-// import dashboardRoutes from './routes/dashboard';
-// import rendasRoutes from './routes/rendas';
-// import gastosFixosRoutes from './routes/gastos-fixos';
-// import dividasRoutes from './routes/dividas';
-// app.use('/api/auth', authRoutes);
-// app.use('/api/dashboard', dashboardRoutes);
-// app.use('/api/rendas', rendasRoutes);
-// app.use('/api/gastos-fixos', gastosFixosRoutes);
-// app.use('/api/dividas', dividasRoutes);
+// Routes
+import authRoutes from './routes/auth';
+import dashboardRoutes from './routes/dashboard';
+import rendasRoutes from './routes/rendas';
+import gastosFixosRoutes from './routes/gastos-fixos';
+import dividasRoutes from './routes/dividas';
+
+app.use('/api/auth', authRoutes);
+app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/rendas', rendasRoutes);
+app.use('/api/gastos-fixos', gastosFixosRoutes);
+app.use('/api/dividas', dividasRoutes);
 
 // Error handling middleware
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {

@@ -14,7 +14,7 @@ model User {
   id        String     @id @default(cuid())
   email     String     @unique
   nome      String
-  googleId  String     @unique
+  googleId  String     @unique @default("")
   photoUrl  String?
   totpSecret String?
   is_admin  Boolean    @default(false)
@@ -92,9 +92,11 @@ model Divida {
   vencimento        Int      // 1-31
   parcelas_pagas    Int      @default(0)
   parcelas_totais   Int
+  saldo_devedor     Decimal  @db.Decimal(12, 2) // Saldo total devedor
 
   mes_ano           String   // "2026-05"
   pago              Boolean  @default(false)
+  quitado           Boolean  @default(false) // Se a dívida foi quitada
 
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
