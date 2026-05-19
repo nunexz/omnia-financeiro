@@ -1,0 +1,154 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String     @id @default(cuid())
+  email     String     @unique
+  nome      String
+  googleId  String     @unique
+  photoUrl  String?
+  totpSecret String?
+  is_admin  Boolean    @default(false)
+
+  rendas            Renda[]
+  gastos            GastoFixo[]
+  dividas           Divida[]
+  gastosVariaveis   GastoVariavel[]
+  investimentos     Investimento[]
+  auditoria         AuditoriaLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Renda {
+  id               String   @id @default(cuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  nome             String
+  valor_bruto      Decimal  @db.Decimal(12, 2)
+  valor_liquido    Decimal  @db.Decimal(12, 2)
+  is_clt           Boolean
+  dependentes      Int      @default(0)
+  outros_descontos DescontoRenda[]
+
+  mes_ano          String   // "2026-05"
+  pago             Boolean  @default(false)
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([userId])
+  @@index([mes_ano])
+}
+
+model DescontoRenda {
+  id       String   @id @default(cuid())
+  rendaId  String
+  renda    Renda    @relation(fields: [rendaId], references: [id], onDelete: Cascade)
+
+  desc     String
+  valor    Decimal  @db.Decimal(12, 2)
+
+  @@index([rendaId])
+}
+
+model GastoFixo {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  nome        String
+  valor       Decimal  @db.Decimal(12, 2)
+  vencimento  Int      // 1-31
+
+  mes_ano     String   // "2026-05"
+  pago        Boolean  @default(false)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+  @@index([mes_ano])
+}
+
+model Divida {
+  id                String   @id @default(cuid())
+  userId            String
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  nome              String
+  parcela           Decimal  @db.Decimal(12, 2)
+  vencimento        Int      // 1-31
+  parcelas_pagas    Int      @default(0)
+  parcelas_totais   Int
+
+  mes_ano           String   // "2026-05"
+  pago              Boolean  @default(false)
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([userId])
+  @@index([mes_ano])
+}
+
+model GastoVariavel {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  descricao   String
+  valor       Decimal  @db.Decimal(12, 2)
+  categoria   String
+  data        DateTime
+  obs         String?  @db.Text
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+  @@index([data])
+}
+
+model Investimento {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  nome      String
+  valor     Decimal  @db.Decimal(12, 2)
+  mes_ano   String   // "2026-05"
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([mes_ano])
+}
+
+model AuditoriaLog {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  acao      String   // "CREATE", "UPDATE", "DELETE", "VIEW"
+  tabela    String
+  registroId String
+  dados     String?  @db.Text // JSON com dados alterados
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([createdAt])
+}
