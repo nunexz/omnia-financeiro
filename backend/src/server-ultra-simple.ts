@@ -3,6 +3,12 @@ import express from 'express';
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Root
+app.get('/', (req, res) => {
+  console.log('GET /');
+  res.json({ status: 'ok', message: 'Omnia Backend is running' });
+});
+
 // Health check - deve estar ANTES de qualquer middleware
 app.get('/health', (req, res) => {
   console.log('GET /health');
