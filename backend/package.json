@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "npm install",
-    "start": "npx ts-node --transpile-only src/server.ts",
+    "start": "npm install && npx prisma generate && npx ts-node --transpile-only src/server.ts",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:push": "prisma db push",
