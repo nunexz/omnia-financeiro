@@ -36,12 +36,22 @@ import dashboardRoutes from './routes/dashboard';
 import rendasRoutes from './routes/rendas';
 import gastosFixosRoutes from './routes/gastos-fixos';
 import dividasRoutes from './routes/dividas';
+import gastosVariaveisRoutes from './routes/gastos-variaveis';
+import investimentosRoutes from './routes/investimentos';
+import exportImportRoutes from './routes/export-import';
+import adminRoutes from './routes/admin';
+import copyDataRoutes from './routes/copy-data';
 
 app.use('/api/auth', authRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/rendas', rendasRoutes);
 app.use('/api/gastos-fixos', gastosFixosRoutes);
 app.use('/api/dividas', dividasRoutes);
+app.use('/api/gastos-variaveis', gastosVariaveisRoutes);
+app.use('/api/investimentos', investimentosRoutes);
+app.use('/api/export', exportImportRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/copy-data', copyDataRoutes);
 
 // Error handling middleware
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {

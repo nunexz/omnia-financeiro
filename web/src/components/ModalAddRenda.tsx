@@ -146,7 +146,7 @@ export default function ModalAddRenda({ isOpen, onClose, mesAno }: ModalAddRenda
         dependentes: parseInt(data.dependentes),
         is_clt: data.is_clt === 'true',
         mes_ano: mesAno,
-        outros_descontos: descontos.length > 0 ? descontos : undefined,
+        outros_descontos: descontos.length > 0 ? descontos.map(d => ({ desc: d.desc, valor: d.valor })) : undefined,
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['dashboard', mesAno] })

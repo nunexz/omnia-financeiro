@@ -19,15 +19,53 @@ model User {
   totpSecret String?
   is_admin  Boolean    @default(false)
 
+  // Controle de Acessos
+  status    String     @default("active") // active | suspended
+  tier      String     @default("free") // free | monthly | annual
+  trialEndsAt DateTime? // Data em que o trial expira (null = acesso ilimitado)
+  approvedBy String?
+  approvedAt DateTime?
+  suspendedAt DateTime?
+  suspendReason String?
+
   rendas            Renda[]
   gastos            GastoFixo[]
   dividas           Divida[]
   gastosVariaveis   GastoVariavel[]
   investimentos     Investimento[]
   auditoria         AuditoriaLog[]
+  approvalAudits    UserApprovalAudit[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model UserApprovalAudit {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  action String // approved | rejected | suspended | unsuspended
+  reason String?
+  approvedBy String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model AdminInvite {
+  id String @id @default(cuid())
+  email String
+  token String @unique
+  status String @default("pending") // pending | accepted | rejected | expired
+  createdBy String // userId de quem criou o invite
+  acceptedBy String? // userId de quem aceitou
+  acceptedAt DateTime?
+  expiresAt DateTime // invite expira em 7 dias
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+  @@index([token])
 }
 
 model Renda {

@@ -7,6 +7,7 @@ interface User {
   photoUrl?: string
   is_admin: boolean
   totpEnabled: boolean
+  trialEndsAt?: string | null
 }
 
 interface AuthState {

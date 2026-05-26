@@ -143,6 +143,44 @@ router.patch('/:id/marcar-pago', authenticate, async (req: Request, res: Respons
       data: { pago },
     });
 
+    // Se marcou como pago, criar próxima parcela no próximo mês
+    if (pago && divida.parcelas_pagas < divida.parcelas_totais) {
+      const [year, month] = divida.mes_ano.split('-');
+      let nextMonth = parseInt(month) + 1;
+      let nextYear = parseInt(year);
+
+      if (nextMonth > 12) {
+        nextMonth = 1;
+        nextYear += 1;
+      }
+
+      const nextMesAno = `${nextYear}-${String(nextMonth).padStart(2, '0')}`;
+
+      // Verificar se já existe dívida para o próximo mês
+      const existingNextMonth = await prisma.divida.findFirst({
+        where: {
+          userId,
+          mes_ano: nextMesAno,
+          nome: divida.nome,
+        },
+      });
+
+      if (!existingNextMonth) {
+        await prisma.divida.create({
+          data: {
+            userId,
+            nome: divida.nome,
+            parcela: divida.parcela,
+            vencimento: divida.vencimento,
+            parcelas_pagas: 0,
+            parcelas_totais: divida.parcelas_totais,
+            mes_ano: nextMesAno,
+            pago: false,
+          },
+        });
+      }
+    }
+
     res.json(updated);
   } catch (error) {
     console.error('Mark divida as paid error:', error);

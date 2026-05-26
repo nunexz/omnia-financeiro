@@ -115,7 +115,7 @@ export default function ModalAddGastoFixo({ isOpen, onClose, mesAno }: ModalAddG
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 px-4 py-2 bg-primary-600 dark:bg-primary-500 text-white rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 disabled:opacity-50 transition"
+              className="flex-1 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 disabled:opacity-50 transition"
             >
               {loading ? 'Adicionando...' : 'Adicionar'}
             </button>

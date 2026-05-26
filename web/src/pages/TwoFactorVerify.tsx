@@ -3,12 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { authAPI } from '../services/api'
 import { useAuthStore } from '../store/authStore'
 
-interface TwoFactorVerifyProps {
-  isDark?: boolean
-  setIsDark?: (value: boolean) => void
-}
-
-export default function TwoFactorVerify({ isDark = false, setIsDark }: TwoFactorVerifyProps) {
+export default function TwoFactorVerify() {
   const navigate = useNavigate()
   const setTotpEnabled = useAuthStore((state) => state.setTotpEnabled)
   const [code, setCode] = useState('')

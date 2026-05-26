@@ -61,7 +61,14 @@ export default function Login({ isDark = false, setIsDark }: LoginProps) {
 
                 console.log('Google login successful, sending token to backend...')
                 const response = await authAPI.loginWithGoogle(credentialResponse.credential)
-                const { accessToken, user } = response.data
+                const { accessToken, user, requiresApproval } = response.data
+
+                // Se usuário está pendente de aprovação, não fazer login
+                if (requiresApproval) {
+                  localStorage.setItem('pendingUserEmail', user.email)
+                  navigate('/pending-approval')
+                  return
+                }
 
                 setAuth(accessToken, user)
 

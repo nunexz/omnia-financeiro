@@ -59,6 +59,9 @@ export const rendasAPI = {
 
   deleteRenda: (id: string) =>
     api.delete(`/api/rendas/${id}`),
+
+  adicionar13Automatico: (data: any) =>
+    api.post('/api/rendas/adicionar-13-automatico', data),
 }
 
 export const gastosFixosAPI = {
@@ -113,6 +116,35 @@ export const gastosVariaveisAPI = {
 
   deleteGasto: (id: string) =>
     api.delete(`/api/gastos-variaveis/${id}`),
+}
+
+export const investimentosAPI = {
+  getInvestimentos: (mesAno: string) =>
+    api.get(`/api/investimentos/${mesAno}`),
+
+  addInvestimento: (data: any) =>
+    api.post('/api/investimentos', data),
+
+  editInvestimento: (id: string, data: any) =>
+    api.put(`/api/investimentos/${id}`, data),
+
+  deleteInvestimento: (id: string) =>
+    api.delete(`/api/investimentos/${id}`),
+}
+
+export const exportImportAPI = {
+  exportJSON: (mesAno: string) =>
+    api.get(`/api/export/json`, { params: { mesAno } }),
+
+  importJSON: (data: any) =>
+    api.post('/api/export/json', data),
+}
+
+export const copyDataAPI = {
+  copyFromPreviousMonth: (mesAno: string) =>
+    api.post('/api/copy-data/from-previous-month', { mesAno }),
+  clearMonth: (mesAno: string) =>
+    api.delete('/api/copy-data/clear-month', { data: { mesAno } }),
 }
 
 export default api

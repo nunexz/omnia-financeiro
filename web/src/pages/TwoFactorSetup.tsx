@@ -4,12 +4,7 @@ import { authAPI } from '../services/api'
 import QRCode from 'qrcode.react'
 import { Copy, Check } from 'lucide-react'
 
-interface TwoFactorSetupProps {
-  isDark?: boolean
-  setIsDark?: (value: boolean) => void
-}
-
-export default function TwoFactorSetup({ isDark = false, setIsDark }: TwoFactorSetupProps) {
+export default function TwoFactorSetup() {
   const navigate = useNavigate()
   const [qrCode, setQrCode] = useState<string | null>(null)
   const [secret, setSecret] = useState<string | null>(null)

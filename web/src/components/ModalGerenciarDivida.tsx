@@ -15,6 +15,8 @@ export default function ModalGerenciarDivida({ isOpen, onClose, mesAno, divida }
   const [parcelasAntecipadas, setParcelasAntecipadas] = useState(1)
   const queryClient = useQueryClient()
 
+  if (!isOpen || !divida) return null
+
   const parcelasRestantes = divida.parcelas_totais - divida.parcelas_pagas
   const dataTermino = useMemo(() => {
     const hoje = new Date()
@@ -54,8 +56,6 @@ export default function ModalGerenciarDivida({ isOpen, onClose, mesAno, divida }
       onClose()
     },
   })
-
-  if (!isOpen || !divida) return null
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">

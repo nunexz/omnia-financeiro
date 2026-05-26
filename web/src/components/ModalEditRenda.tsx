@@ -135,7 +135,7 @@ export default function ModalEditRenda({ isOpen, onClose, mesAno, renda }: Modal
         setDescontos(renda.outros_descontos.map((d: any) => ({
           id: d.id || Date.now().toString(),
           desc: d.desc,
-          valor: d.valor,
+          valor: typeof d.valor === 'number' ? d.valor : parseFloat(d.valor),
         })))
       } else {
         setDescontos([])
@@ -152,7 +152,7 @@ export default function ModalEditRenda({ isOpen, onClose, mesAno, renda }: Modal
         valor_liquido: cálculos.líquido,
         dependentes: parseInt(data.dependentes),
         is_clt: data.is_clt === 'true',
-        outros_descontos: descontos.length > 0 ? descontos : undefined,
+        outros_descontos: descontos.length > 0 ? descontos.map(d => ({ desc: d.desc, valor: d.valor })) : undefined,
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['dashboard', mesAno] })

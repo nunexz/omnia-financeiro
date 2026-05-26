@@ -55,13 +55,27 @@ router.post('/google', async (req: Request, res: Response) => {
     });
 
     if (!user) {
+      // Novo usuário recebe 7 dias de trial
+      const trialEndsAt = new Date();
+      trialEndsAt.setDate(trialEndsAt.getDate() + 7);
+
       user = await prisma.user.create({
         data: {
           email: payload.email,
           nome: payload.name || payload.email.split('@')[0],
           googleId: payload.sub || `google_${payload.email}`,
           photoUrl: payload.picture || '',
+          status: 'active',
+          trialEndsAt: trialEndsAt,
         },
+      });
+    }
+
+    // Se usuário foi suspenso, negar acesso
+    if (user.status === 'suspended') {
+      return res.status(403).json({
+        error: 'Acesso suspenso',
+        suspendReason: user.suspendReason || 'Sem motivo especificado',
       });
     }
 
@@ -70,6 +84,7 @@ router.post('/google', async (req: Request, res: Response) => {
         id: user.id,
         email: user.email,
         is_admin: user.is_admin,
+        status: user.status,
       },
       process.env.JWT_SECRET!,
       { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
@@ -83,7 +98,9 @@ router.post('/google', async (req: Request, res: Response) => {
         nome: user.nome,
         photoUrl: user.photoUrl,
         is_admin: user.is_admin,
+        status: user.status,
         totpEnabled: !!user.totpSecret,
+        trialEndsAt: user.trialEndsAt,
       },
     });
   } catch (error: any) {
