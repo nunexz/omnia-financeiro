@@ -10,10 +10,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": false,
     "resolveJsonModule": true,
-    "moduleResolution": "node",
-    "ignoreDeprecations": "5.0",
-    "noEmitOnError": false,
-    "suppressImplicitAnyIndexErrors": true
+    "moduleResolution": "node"
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
